@@ -1,0 +1,9 @@
+#Fri Nov 27 15:22:41 CST 2009
+DELEGATES_PREFERENCE=delegateValidatorList
+USER_BUILD_PREFERENCE=enabledBuildValidatorList
+USER_MANUAL_PREFERENCE=enabledManualValidatorListcom.genuitec.eclipse.javascript.validation.JavaScriptValidator;com.genuitec.eclipse.jsf.facelets.FaceletsValidator;org.eclipse.jst.jsf.validation.internal.appconfig.AppConfigValidator;
+USER_PREFERENCE=overrideGlobalPreferencesfalse
+eclipse.preferences.version=1
+override=false
+suspend=false
+vf.version=3

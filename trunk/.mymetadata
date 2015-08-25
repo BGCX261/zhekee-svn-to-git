@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="zhekee"
+  id="myeclipse.1252204274187"
+  context-root="/groupon"
+  j2ee-spec="5.0"
+  archive="zhekee.war">
+  <attributes>
+    <attribute name="webrootdir" value="/web" />
+  </attributes>
+</project-module>
+

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- name:对应工程的名字；default:需要的缺省任务(运行"ant"不指明任务时执行的任务) -->
+<project name="zhekee" default="dist" basedir=".">
+	
+	<!-- 建立目录结构
+		src       JAVA源码编辑目录
+		lib       jar包(类库)存放目录
+		bin       编译生成的class文件存放目录
+		dist      war和javadoc存放目录
+		WebRoot   jsp文件存放地方
+		config    配置文件存放地方	
+	-->
+	<property name="appName" value="zhekee"/>
+	<property name="src.dir" value="src"/>
+	<property name="lib.dir" value="web/WEB-INF/lib"/>
+	<property name="dist.dir" value="dist"/>
+	<property name="classes.dir" value="bin"/>
+	<property name="webapps.dir" value="f:/tomcat-6.0.20/webapps/extjsoa"/>
+	<property name="webapps.lib" value="f:/tomcat-6.0.20/lib"/>
+	<property name="webroot.dir" value="web"/>
+	<!-- 
+	<property name="config.dir" value="config"/> -->
+	<property name="catalina.home" value="f:/tomcat-6.0.20/lib"/> 
+
+	<!-- Compilation Classpath 路径设置 -->
+	<path id="compile.classpath">
+		<pathelement location="${classes.dir}"/>
+		<fileset dir="${lib.dir}" includes="**/*.jar" /> 
+		<fileset dir="${webapps.lib}" includes="**/*.jar" />  	
+	</path>
+	
+	<!-- Clean Target 删除先前的目录结构 -->
+	<target name="clean" description="Delete old build and dist directories">
+		<delete dir="${clesses.dir}"/>
+		<delete dir="${dist.dir}"/>
+		<delete dir="${webapps.dir}"/>
+	</target>
+	
+	<!-- Prepare Target 建立打包的目的目录结构 -->
+	<target name="prepare">
+		<mkdir dir="${classes.dir}"/>
+		<mkdir dir="${dist.dir}"/>
+	</target>
+	
+	<!-- Compile Target 编译代码，在这之前先由prepare建立目录结构 -->  
+	<target name="compile" depends="prepare" description="Compile java sources">
+		<!-- Compile java class as necessary -->
+		<javac encoding="utf-8" srcdir="${src.dir}" destdir="${classes.dir}">
+			<classpath refid="compile.classpath"/>
+		</javac>
+		
+		<copy todir="${classes.dir}">
+			<fileset dir="${src.dir}">
+				<include name="**/*.xml"/>
+	            <include name="**/*.properties" />
+			</fileset>
+		</copy>
+	</target>
+	
+	<!-- Deploy Target 在tomcat下建立应用目录并部署应用 -->   
+	<target name="deploy" depends="compile" description="Deploy application to servlet container">
+		<!-- Copy the contents of the build directory -->    
+		<mkdir dir="${webapps.dir}"/>    
+		<copy todir="${webapps.dir}">    
+			<fileset dir="${webroot.dir}"/>    
+		</copy>    
+		
+		<mkdir dir="${webapps.dir}/WEB-INF/classes"/>
+		<copy todir="${webapps.dir}/WEB-INF/classes">
+			<fileset dir="${classes.dir}" >
+				<include name="**/**" />
+			</fileset>
+		</copy>
+		
+		<mkdir dir="${webapps.dir}/WEB-INF/lib"/>
+		<copy todir="${webapps.dir}/WEB-INF/lib">
+			<fileset dir="${lib.dir}" includes="*.jar" />
+		</copy>
+		<!-- 
+		<copy todir="${webapps.dir}/WEB-INF/">    
+			<fileset dir="${config.dir}"/>    
+		</copy> -->
+	</target>
+		
+	<!-- Dist Target 将应用打包成war，在这之前先执行javadoc和deploy -->  
+	<target name="dist" depends="clean,deploy" description="Create binary destribution">	
+		<jar jarfile="${dist.dir}/${appName}.war" basedir="${webapps.dir}"/>
+	</target>
+	
+	<!-- Javadoc Target 生成javadoc 
+	<target name="javadoc" depends="compile" description="Create Javadoc API documentation">
+		<mkdir dir="${dist.dir}/docs"/>
+		<javadoc sourcepath="${src.dir}" destdir="${dist.dir}/docs"/>
+	</target>
+	-->
+</project>
